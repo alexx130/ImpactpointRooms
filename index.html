@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Invitation Info</title>
+    <style>
+        @font-face {
+            font-family: 'Visitor1';
+            src: url('visitor1.ttf') format('truetype');
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('wallpaper.png'); /* Use your wallpaper image */
+            background-size: cover;
+            color: yellow; /* Change text color to yellow */
+            font-family: 'Visitor1', cursive; /* Use custom font */
+            position: relative; /* Add position relative to body */
+        }
+        #invitationInfo {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-family: 'Visitor1', cursive; /* Use custom font */
+        }
+        #joinButton {
+            z-index: 1; /* Ensure button is above the image */
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #3A2D5B; /* Set button background color */
+            color: #fff;
+            border: 2px solid white; /* Set button border */
+            border-radius: 0; /* Set button border to rectangle */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Visitor1', cursive; /* Use custom font */
+        }
+        #joinButton:hover {
+            background-color: #5B4E7E; /* Change button color on hover */
+            font-family: 'Visitor1', bold; /* Use custom font */
+        }
+        #joinButton img {
+            position: absolute; /* Position the image relative to the button */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the button */
+            border-radius: inherit; /* Inherit border radius from the button */
+        }
+    </style>
+</head>
+<body>
+    <div id="invitationInfo"></div>
+    <button id="joinButton">Join Game</button>
+
+    <script>
+        // Function to extract query parameters from the URL
+        function getQueryParameter(paramName) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(paramName);
+        }
+
+        // Get the values of username, roomcode, and region from the URL
+        const username = getQueryParameter('username');
+        const roomcode = getQueryParameter('roomcode');
+        const region = getQueryParameter('region');
+
+        // Display the invitation info
+        const invitationInfoElement = document.getElementById('invitationInfo');
+        if (username && roomcode && region) {
+            invitationInfoElement.textContent = `${username} invited you to room ${roomcode} in ${region}.`;
+        } else {
+            invitationInfoElement.textContent = "Error: No invitation information provided.";
+            // Disable join button if no invitation info provided
+            document.getElementById('joinButton').disabled = true;
+            // Close the web page after 5 seconds
+            setTimeout(() => {
+                window.close();
+            }, 5000);
+        }
+
+        // Add click event listener to join button
+        document.getElementById('joinButton').addEventListener('click', function() {
+            // Copy the URL to the clipboard
+            copyUrlToClipboard();
+            // Open the Steam game with App ID 1680550
+            openSteamGame(1680550);
+        });
+
+        // Function to open the Steam game
+        function openSteamGame(appId) {
+            // Construct the Steam URL for the specified App ID
+            var steamUrl = "steam://run/" + appId;
+
+            // Open the Steam game using the constructed URL
+            window.location.href = steamUrl;
+        }
+
+        // Function to copy the URL to the clipboard
+        function copyUrlToClipboard() {
+            // Get the current URL
+            const currentUrl = window.location.href;
+
+            // Copy the URL to the clipboard
+            navigator.clipboard.writeText(currentUrl)
+                .then(() => {
+                    console.log('URL copied to clipboard:', currentUrl);
+                })
+                .catch(err => {
+                    console.error('Failed to copy URL to clipboard:', err);
+                });
+        }
+    </script>
+</body>
+</html>
